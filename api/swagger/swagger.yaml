@@ -20,6 +20,7 @@ paths:
       parameters:
         - name: user
           in: body
+          required: true
           description: User data
           schema:
             type: object
@@ -36,14 +37,9 @@ paths:
           description: Successfully created user
           schema:
             type: object
-            required:
-              - email
-              - password
             properties:
-              email:
-                type: string
-              password:
-                type: string
+              id:
+                type: number
         default:
           description: Error
           schema:
@@ -54,8 +50,9 @@ paths:
       description: Logs in user
       operationId: login
       parameters:
-        - name: login
+        - name: credentials
           in: body
+          required: true
           schema:
             type: object
             required:
@@ -69,15 +66,12 @@ paths:
       responses:
         "200":
           description: Successfully logged in user
-          headers:
-            X-Session-ID:
-              type: string
           schema:
             type: object
+            required:
+              - X-Session-ID
             properties:
-              email:
-                type: string
-              password:
+              X-Session-ID:
                 type: string
         default:
           description: Error
@@ -92,12 +86,21 @@ paths:
         - name: title
           in: query
           type: string
+          required: true
         - name: X-Session-ID
           in: header
           type: string
+          required: true
       responses:
         "200":
           description: Found video
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+              title:
+                type: string
         default:
           description: Error
           schema:
