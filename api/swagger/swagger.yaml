@@ -21,25 +21,14 @@ paths:
         - name: user
           in: body
           required: true
-          description: User data
+          description: User data to create new user with
           schema:
-            type: object
-            required:
-              - email
-              - password
-            properties:
-              email:
-                type: string
-              password:
-                type: string
+            $ref: "#/definitions/CreateUserObject"
       responses:
-        "200":
+        "201":
           description: Successfully created user
           schema:
-            type: object
-            properties:
-              id:
-                type: number
+            $ref: "#/definitions/UserObject"
         default:
           description: Error
           schema:
@@ -54,24 +43,16 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            required:
-              - email
-              - password
-            properties:
-              email:
-                type: string
-              password:
-                type: string
+            $ref: "#/definitions/CreateUserObject"
       responses:
         "200":
           description: Successfully logged in user
           schema:
             type: object
             required:
-              - X-Session-ID
+              - sessionID
             properties:
-              X-Session-ID:
+              sessionID:
                 type: string
         default:
           description: Error
@@ -95,12 +76,7 @@ paths:
         "200":
           description: Found video
           schema:
-            type: object
-            properties:
-              id:
-                type: number
-              title:
-                type: string
+            $ref: "#/definitions/VideoObject"
         default:
           description: Error
           schema:
@@ -113,4 +89,29 @@ definitions:
       - message
     properties:
       message:
+        type: string
+  CreateUserObject:
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+  UserObject:
+    properties:
+      id:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+  VideoObject:
+    properties:
+      id:
+        type: number
+      title:
+        type: string
+      genre:
         type: string
