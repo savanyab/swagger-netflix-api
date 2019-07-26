@@ -68,7 +68,7 @@ paths:
           in: query
           type: string
           required: true
-        - name: X-Session-ID
+        - name: sessionID
           in: header
           type: string
           required: true
@@ -110,8 +110,8 @@ definitions:
   VideoObject:
     properties:
       id:
-        type: number
+        type: string
       title:
         type: string
-      genre:
-        type: string
+      year:
+        type: number
