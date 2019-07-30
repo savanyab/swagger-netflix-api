@@ -58,6 +58,33 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /users/{userId}/queue:
+     x-swagger-router-controller: users
+     get:
+      description: Get user's own queue
+      operationId: getQueue
+      parameters:
+        - name: userId
+          in: path
+          type: string
+          required: true
+        - name: sessionID
+          in: header
+          type: string
+          required: true
+      responses:
+        "200":
+          description: Show queue
+          schema:
+            properties:
+              queue:
+                type: array
+                items: 
+                  $ref: "#/definitions/VideoObject"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /videos:
     x-swagger-router-controller: videos
     get:
@@ -108,23 +135,6 @@ paths:
                 type: array
                 items: 
                   $ref: "#/definitions/VideoObject"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /videos/queue:
-     x-swagger-router-controller: videos
-     get:
-      description: Get user's own queue
-      operationId: getQueue
-      parameters:
-        - name: userId
-          in: query
-          required: true
-          type: string
-      responses:
-        "200":
-          description: Show queue
         default:
           description: Error
           schema:
