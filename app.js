@@ -22,9 +22,11 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
       const db = client.db('netflix');
       const usersCollection = db.collection('users');
       const videosCollection = db.collection('videos');
+      const queueCollection = db.collection('queue');
       const port = process.env.PORT || 10010;
       app.locals.usersCollection = usersCollection;
       app.locals.videosCollection = videosCollection;
+      app.locals.queueCollection = queueCollection;
       app.listen(port);      
     });
   } catch (err) {
