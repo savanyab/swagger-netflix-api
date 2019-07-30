@@ -2,7 +2,8 @@ const randomstring = require('randomstring');
 
 module.exports = {
   createUser: createUser,
-  login: login
+  login: login,
+  getQueue: getQueue
 }
 
 
@@ -35,5 +36,24 @@ function login(req, res) {
     }).catch(e => {
       res.status(401);
       res.send(e.message);
+    });
+}
+
+function getQueue(req, res) {
+  const userId = req.swagger.params.userId.value;
+  const sessionID = req.swagger.params.sessionID.value;
+  const queueCollection = req.app.locals.queueCollection;
+
+  if (!sessionID) {
+    return res.status(401).json({ message: "Please log in" });
+  }
+
+  queueCollection.findOne({ "userId": userId })
+    .then(queueDoc => {
+      if (!queueDoc) {
+        return res.status(404).json({ "message": "Queue not found" });
+      }
+
+      res.json({ "queue": queueDoc.queue });
     });
 }
