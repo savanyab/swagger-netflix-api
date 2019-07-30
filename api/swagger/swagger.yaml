@@ -80,7 +80,67 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"      
+            $ref: "#/definitions/ErrorResponse"  
+  /videos/download:
+    x-swagger-router-controller: videos
+    put:
+      description: Download video to user's own queue
+      operationId: download
+      parameters:
+        - name: download
+          in: body
+          description: UserId and video title needed for download
+          required: true
+          schema:
+           $ref: "#/definitions/DownloadRequest"
+        - name: sessionID
+          in: header
+          type: string
+          required: true
+      responses:
+        "200":
+          description: Successful video download
+          schema:
+            properties:
+              userId:
+                type: string
+              queue:
+                type: array
+                items: 
+                  $ref: "#/definitions/VideoObject"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /videos/queue:
+     x-swagger-router-controller: videos
+     get:
+      description: Get user's own queue
+      operationId: getQueue
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Show queue
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /logout:
+    x-swagger-router-controller: users
+    get:
+      description: Log out user
+      operationId: logout
+      responses:
+        "200":
+          description: Show queue
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 definitions:
@@ -115,3 +175,14 @@ definitions:
         type: string
       year:
         type: number
+  DownloadRequest:
+    required:
+      - title
+      - userId
+    properties:
+      title:
+        description: Title of video to download
+        type: string
+      userId:
+        description: User's id who downloads the video to their own queue
+        type: string
