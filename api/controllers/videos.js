@@ -1,24 +1,51 @@
 module.exports = {
-  findVideoByTitle: findVideoByTitle
+  findVideoByTitle: findVideoByTitle,
+  download: download
 }
 
 function findVideoByTitle(req, res) {
   const title = req.swagger.params.title.value;
   const sessionId = req.swagger.params.sessionID.value;
-  const collection = req.app.locals.videosCollection;
+  const videosCollection = req.app.locals.videosCollection;
 
   if (!sessionId) {
-    return res.status(401).json({message: "Please log in to see video"})
+    return res.status(401).json({ message: "Please log in to see video" })
   }
 
-  collection.find({ "title": title }).toArray()
+  videosCollection.find({ "title": title }).toArray()
     .then(video => {
       if (!video[0]) {
-        return res.status(404).json({message: "Video not found"})
+        return res.status(404).json({ message: "Video not found" })
       }
       res.json({ "id": video[0]._id, "title": video[0].title, "year": video[0].year });
     }).catch(e => {
-      res.send(e.message);
+      res.send({ "Error": e.message });
     });
-
 }
+
+function download(req, res) {
+  const queueCollection = req.app.locals.queueCollection;
+  const videosCollection = req.app.locals.videosCollection;
+  const title = req.swagger.params.download.value.title;
+  const userId = req.swagger.params.download.value.userId;
+  const sessionId = req.swagger.params.sessionID.value;
+
+  if (!sessionId) {
+    return res.status(401).json({ message: "Please log in" });
+  }
+
+  videosCollection.findOne({ "title": title }).then(video => {
+    const query = { "userId": userId };
+    const update = {
+      $addToSet: {
+        "queue": video
+      }
+    }
+    const options = { upsert: true}
+    queueCollection.updateOne(query, update, options)
+      .then(queueCollection.find(query).toArray()
+        .then(queue => {
+          res.json({ "queue": queue})
+        }))
+  }).catch(e => res.send({ "Error": e.message }));
+} 
