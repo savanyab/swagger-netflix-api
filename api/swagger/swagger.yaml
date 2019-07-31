@@ -146,7 +146,7 @@ paths:
       operationId: logout
       responses:
         "200":
-          description: Show queue
+          description: Logs out user
         default:
           description: Error
           schema:
