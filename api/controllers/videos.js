@@ -35,6 +35,9 @@ function download(req, res) {
   }
 
   videosCollection.findOne({ "title": title }).then(video => {
+    if (!video) {
+      return res.status(404).json({ "message": "Video not found" });
+    }
     const query = { "userId": userId };
     const update = {
       $addToSet: {
@@ -43,9 +46,9 @@ function download(req, res) {
     }
     const options = { upsert: true}
     queueCollection.updateOne(query, update, options)
-      .then(queueCollection.find(query).toArray()
-        .then(queue => {
-          res.json({ "queue": queue})
+      .then(queueCollection.findOne(query)
+        .then(queueDoc => {
+          res.json({ "queue": queueDoc.queue})
         }))
   }).catch(e => res.send({ "Error": e.message }));
 } 
