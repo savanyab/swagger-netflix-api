@@ -3,7 +3,8 @@ const randomstring = require('randomstring');
 module.exports = {
   createUser: createUser,
   login: login,
-  getQueue: getQueue
+  getQueue: getQueue,
+  logout: logout
 }
 
 
@@ -56,4 +57,8 @@ function getQueue(req, res) {
 
       res.json({ "queue": queueDoc.queue });
     });
+}
+
+function logout(req, res) {
+  res.status(200);
 }
